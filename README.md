@@ -132,14 +132,10 @@ $ git status
           new file:   client/src/reportWebVitals.js
           new file:   client/src/setupTests.js
           new file:   server/app.js
-          new file:   server/bin/www
           new file:   server/package.json
           new file:   server/public/stylesheets/style.css
           new file:   server/routes/index.js
           new file:   server/routes/users.js
-          new file:   server/views/error.jade
-          new file:   server/views/index.jade
-          new file:   server/views/layout.jade
 $ git commit -m "initialize the project"
 ```
 
