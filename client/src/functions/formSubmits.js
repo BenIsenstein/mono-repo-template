@@ -1,10 +1,8 @@
 import { useState, useContext, useEffect, useCallback } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import UserContext from '../UserContext'
-import { deleteSiBContact } from './manageSiBContacts'
 import stringRandomizer from './stringRandomizer'
-import { useUpdateICS } from '.'
-import { useGetAllInfo } from './useGetAllInfo'
+//import { useGetAllInfo } from './useGetAllInfo'
 
 const useFetchAddEntry = () => {
 
@@ -40,7 +38,7 @@ const useUpdateEntry = () => {
   const { id } = useParams()
   const history = useHistory()
   let fetchAddEntry = useFetchAddEntry()
-  let updateICS = useUpdateICS()
+  //let updateICS = useUpdateICS()
   
   const updateEntry = async (data) => {
     try {
@@ -60,7 +58,7 @@ const useUpdateEntry = () => {
       let resObject = await res.json()
 
       if (!resObject.success) return alert("Your entry wasn't updated for some reason. Please try again.")
-      await updateICS()
+      //await updateICS()
       history.goBack()
     }
     catch (err) {
@@ -123,7 +121,7 @@ const useAddHome = () => {
   const userContext = useContext(UserContext)
   const [taskInfo, setTaskInfo] = useState([])
   let fetchAddEntry = useFetchAddEntry()
-  let updateICS = useUpdateICS()
+  //let updateICS = useUpdateICS()
 
   useEffect(() => {
     const getAllInfo = async () => {
@@ -200,7 +198,7 @@ const useAddHome = () => {
     for (let newEntry of newCalendarEntries) await fetchAddEntry(newEntry)
 
     // update user's ICS file
-    await updateICS()
+    //await updateICS()
 
     if (userContext.user.homes?.length > 0) { // Only navigate to ACCOUNT page if this is the user's FIRST home
       history.goBack()
@@ -214,128 +212,128 @@ const useAddHome = () => {
   return addHome
 }
 
-// update Home
-const useUpdateHome = () => {
-  const { id } = useParams()
-  const history = useHistory()
-  const userContext = useContext(UserContext)
-  const deleteEntry = useDeleteEntry()
-  const fetchAddEntry = useFetchAddEntry()
-  const defaultTasks = useGetAllInfo()
-  let updateICS = useUpdateICS()
+// // update Home
+// const useUpdateHome = () => {
+//   const { id } = useParams()
+//   const history = useHistory()
+//   const userContext = useContext(UserContext)
+//   const deleteEntry = useDeleteEntry()
+//   const fetchAddEntry = useFetchAddEntry()
+//   //const defaultTasks = useGetAllInfo()
+//   //let updateICS = useUpdateICS()
 
-  const updateHome = async (data) => {
-    // - - - DEAL WITH NEWLY SELECTED AND UNSELECTED ITEMS - - - //
-    try {
-      // fetch all calendar entries for current authenticated user
-      let entriesRes = await fetch(`/api/calendarEntry/getbyuser/${userContext.user?._id}`)
-      let entriesObject = await entriesRes.json()
+//   const updateHome = async (data) => {
+//     // - - - DEAL WITH NEWLY SELECTED AND UNSELECTED ITEMS - - - //
+//     try {
+//       // fetch all calendar entries for current authenticated user
+//       let entriesRes = await fetch(`/api/calendarEntry/getbyuser/${userContext.user?._id}`)
+//       let entriesObject = await entriesRes.json()
       
-      //fetch for the home in its former state
-      let homeRes = await fetch(`/api/home/get/${id}`)
-      let homeObject = await homeRes.json()
+//       //fetch for the home in its former state
+//       let homeRes = await fetch(`/api/home/get/${id}`)
+//       let homeObject = await homeRes.json()
       
-      //variables 
-      let entriesList = entriesObject.entryList.filter(entry => entry.homeId === id)
-      let oldHomeItems = homeObject.homeItems
-      let newHomeItems = data.homeItems
-      // console.log("updateHome | oldHomeItems: ", oldHomeItems)
-      // console.log("updateHome | newHomeItems: ", newHomeItems)
+//       //variables 
+//       let entriesList = entriesObject.entryList.filter(entry => entry.homeId === id)
+//       let oldHomeItems = homeObject.homeItems
+//       let newHomeItems = data.homeItems
+//       // console.log("updateHome | oldHomeItems: ", oldHomeItems)
+//       // console.log("updateHome | newHomeItems: ", newHomeItems)
 
-      let oldCustomTasks = homeObject.customTasks || []
-      let newCustomTasks = data.customTasks || []
-      // console.log("updateHome | oldCustomTasks: ", oldCustomTasks)
-      // console.log("updateHome | newCustomTasks: ", newCustomTasks)
+//       let oldCustomTasks = homeObject.customTasks || []
+//       let newCustomTasks = data.customTasks || []
+//       // console.log("updateHome | oldCustomTasks: ", oldCustomTasks)
+//       // console.log("updateHome | newCustomTasks: ", newCustomTasks)
    
-      //do a diff comparison between old and new custom tasks
-      let customTasksNewlyAdded = newCustomTasks.filter(newTask => !oldCustomTasks.find(oldTask => oldTask.item===newTask.item && oldTask.task===newTask.task))
-      let customTasksNewlyRemoved = oldCustomTasks.filter(oldTask => !newCustomTasks.find(newTask => newTask.item===oldTask.item && newTask.task===oldTask.task))
-      // console.log("updateHome | customTasksNewlyAdded: ", customTasksNewlyAdded)
-      // console.log("updateHome | customTasksNewlyRemoved: ", customTasksNewlyRemoved)
+//       //do a diff comparison between old and new custom tasks
+//       let customTasksNewlyAdded = newCustomTasks.filter(newTask => !oldCustomTasks.find(oldTask => oldTask.item===newTask.item && oldTask.task===newTask.task))
+//       let customTasksNewlyRemoved = oldCustomTasks.filter(oldTask => !newCustomTasks.find(newTask => newTask.item===oldTask.item && newTask.task===oldTask.task))
+//       // console.log("updateHome | customTasksNewlyAdded: ", customTasksNewlyAdded)
+//       // console.log("updateHome | customTasksNewlyRemoved: ", customTasksNewlyRemoved)
 
-      //do a diff comparison between old and new selected items
-      let itemsNewlySelected = Object.keys(newHomeItems).filter(itemName => newHomeItems[itemName] && !oldHomeItems[itemName])
-      let itemsNewlyUnselected = Object.keys(oldHomeItems).filter(itemName => oldHomeItems[itemName] && !newHomeItems[itemName])
-      // console.log("updateHome | itemsNewlySelected: ", itemsNewlySelected)
-      // console.log("updateHome | itemsNewlyUnselected: ", itemsNewlyUnselected)
+//       //do a diff comparison between old and new selected items
+//       let itemsNewlySelected = Object.keys(newHomeItems).filter(itemName => newHomeItems[itemName] && !oldHomeItems[itemName])
+//       let itemsNewlyUnselected = Object.keys(oldHomeItems).filter(itemName => oldHomeItems[itemName] && !newHomeItems[itemName])
+//       // console.log("updateHome | itemsNewlySelected: ", itemsNewlySelected)
+//       // console.log("updateHome | itemsNewlyUnselected: ", itemsNewlyUnselected)
 
-      //add all tasks for the items now selected, and custom tasks added
-      let selectedItemsTasks = defaultTasks.filter(task => itemsNewlySelected.includes(task.item))
-      let allTasksToAdd = [...selectedItemsTasks, ...customTasksNewlyAdded]
-      // console.log("updateHome | allTasksToAdd: ", allTasksToAdd)
+//       //add all tasks for the items now selected, and custom tasks added
+//       //let selectedItemsTasks = defaultTasks.filter(task => itemsNewlySelected.includes(task.item))
+//       //let allTasksToAdd = [...selectedItemsTasks, ...customTasksNewlyAdded]
+//       // console.log("updateHome | allTasksToAdd: ", allTasksToAdd)
 
-      allTasksToAdd.forEach(async (task) => {
-        // console.log("")
-        // console.log("")
-        // console.log(`updateHome | adding calendarEntry for task: "${task.item} - ${task.task}"`)
+//       allTasksToAdd.forEach(async (task) => {
+//         // console.log("")
+//         // console.log("")
+//         // console.log(`updateHome | adding calendarEntry for task: "${task.item} - ${task.task}"`)
         
-        let recurrenceDate = new Date()
-        // console.log("updateHome | recurrenceDate first init: ", recurrenceDate)
-        // console.log("updateHome | task.frequency: ", task.frequency)
-        // console.log("updateHome | recurrenceDate.getDate(): ", recurrenceDate.getDate())
-        // console.log("updateHome | parseInt(recurrenceDate.getDate()) + parseInt(task.frequency): ", parseInt(recurrenceDate.getDate()) + parseInt(task.frequency))
+//         let recurrenceDate = new Date()
+//         // console.log("updateHome | recurrenceDate first init: ", recurrenceDate)
+//         // console.log("updateHome | task.frequency: ", task.frequency)
+//         // console.log("updateHome | recurrenceDate.getDate(): ", recurrenceDate.getDate())
+//         // console.log("updateHome | parseInt(recurrenceDate.getDate()) + parseInt(task.frequency): ", parseInt(recurrenceDate.getDate()) + parseInt(task.frequency))
 
 
-        recurrenceDate.setDate(parseInt(recurrenceDate.getDate()) + parseInt(task.frequency))
-        // console.log("updateHome | recurrenceDate after adding frequency: ", recurrenceDate)
+//         recurrenceDate.setDate(parseInt(recurrenceDate.getDate()) + parseInt(task.frequency))
+//         // console.log("updateHome | recurrenceDate after adding frequency: ", recurrenceDate)
 
-        const entry = { 
-          userId: userContext.user?._id,
-          homeId: id,
-          item: task.item,
-          task: task.task,
-          completed: false,
-          homeIcon: data.homeIcon,
-          start: recurrenceDate.setHours(12, 0, 0),
-          end: recurrenceDate.setHours(13, 0, 0)
-        }
+//         const entry = { 
+//           userId: userContext.user?._id,
+//           homeId: id,
+//           item: task.item,
+//           task: task.task,
+//           completed: false,
+//           homeIcon: data.homeIcon,
+//           start: recurrenceDate.setHours(12, 0, 0),
+//           end: recurrenceDate.setHours(13, 0, 0)
+//         }
 
-        await fetchAddEntry(entry)
-      })
+//         await fetchAddEntry(entry)
+//       })
       
-      //delete all tasks for the items now unchecked, and custom tasks removed
-      let unselectedItemsEntries = entriesList.filter(entry => itemsNewlyUnselected.includes(entry.item))
-      let removedCustomTasksEntries = entriesList.filter(entry => customTasksNewlyRemoved.find(task => task.item===entry.item && task.task===entry.task))
-      let entriesToDelete = [...unselectedItemsEntries, ...removedCustomTasksEntries]
+//       //delete all tasks for the items now unchecked, and custom tasks removed
+//       let unselectedItemsEntries = entriesList.filter(entry => itemsNewlyUnselected.includes(entry.item))
+//       let removedCustomTasksEntries = entriesList.filter(entry => customTasksNewlyRemoved.find(task => task.item===entry.item && task.task===entry.task))
+//       let entriesToDelete = [...unselectedItemsEntries, ...removedCustomTasksEntries]
       
-      entriesToDelete.forEach(async (entry) => {
-        // console.log(`updateHome | deleting calendarEntry for task: "${entry.item} - ${entry.task}"`)
-        await deleteEntry(entry._id)
-      })  
-    }  
-    catch (err) {
-      console.log('error submitting new calendar entries: ', err)
-      alert("There was an error updating your home details. We're fixing it as fast as we can.")
-    }
+//       entriesToDelete.forEach(async (entry) => {
+//         // console.log(`updateHome | deleting calendarEntry for task: "${entry.item} - ${entry.task}"`)
+//         await deleteEntry(entry._id)
+//       })  
+//     }  
+//     catch (err) {
+//       console.log('error submitting new calendar entries: ', err)
+//       alert("There was an error updating your home details. We're fixing it as fast as we can.")
+//     }
 
-    // - - - UPDATE THE HOME DOCUMENT - - - //
-    // console.log("updating home now")
+//     // - - - UPDATE THE HOME DOCUMENT - - - //
+//     // console.log("updating home now")
 
-    try {
-      let options = {
-        method: "put",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(data)
-      }
-      let res = await fetch(`/api/home/update/${id}`, options)
-      let resObject = await res.json()
+//     try {
+//       let options = {
+//         method: "put",
+//         headers: { "content-type": "application/json" },
+//         body: JSON.stringify(data)
+//       }
+//       let res = await fetch(`/api/home/update/${id}`, options)
+//       let resObject = await res.json()
 
-      if (!resObject.success) return alert("Your home details wasn't updated for some reason. Please try again.")
+//       if (!resObject.success) return alert("Your home details wasn't updated for some reason. Please try again.")
       
-      // update user's ICS file
-      await updateICS()
+//       // update user's ICS file
+//       await updateICS()
 
-      history.goBack()
-    }
-    catch (err) {
-      console.log('error updating home: ', err)
-      alert("There was an error updating your home details. We're fixing it as fast as we can.")
-    }
+//       history.goBack()
+//     }
+//     catch (err) {
+//       console.log('error updating home: ', err)
+//       alert("There was an error updating your home details. We're fixing it as fast as we can.")
+//     }
 
-  }
+//   }
 
-  return updateHome
-}
+//   return updateHome
+// }
 
 // updateAccount submit function
 const useUpdateAccount = () => {
@@ -402,7 +400,7 @@ const useUpdateAccount = () => {
 
         if (data.email && isEmailChanged) {
           // DELETE the old SendInBlue Contact
-          await deleteSiBContact(oldEmail)
+          //await deleteSiBContact(oldEmail)
           // Generate a random activation code
           let randomString = stringRandomizer(10)
           // Update the user's AUTH document with new activation code and 'disable' the account by setting the 'confirmed' property to FALSE.
@@ -505,5 +503,5 @@ export {
   useUpdateEntry,
   useDeleteEntry,
   useAddHome,
-  useUpdateHome
+  //useUpdateHome
 }

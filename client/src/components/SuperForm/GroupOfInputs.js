@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect, useMemo } from 'react'
 import { FlexSection, GridSection, Input, Select, Li, Button, AddIcon, StyledDateTimePicker } from '../../common'
-import { useGetAllInfo, useIsDateInput } from '../../functions'
+import { useIsDateInput } from '../../functions'
 import CustomItemModal, { DeleteItemModal, EditItemModal } from '../Modals/CustomItemModal'
 import DatetimePickerModal from '../Modals/DatetimePickerModal'
 import ComplexInput from './ComplexInput'
@@ -151,7 +151,7 @@ const GroupOfCheckboxes = ({
   // useEffect(() => console.log("customItems: ", customItems), [customItems])
   // useEffect(() => console.log("allItems: ", allItems), [allItems])
 
-  const allDefaultTasks = useGetAllInfo()
+  //const allDefaultTasks = useGetAllInfo()
   const [allCustomTasks, setAllCustomTasks] = useState([])
 
   // useEffect(() => console.log("allDefaultTasks: ", allDefaultTasks), [allDefaultTasks])
@@ -237,10 +237,10 @@ const GroupOfCheckboxes = ({
       {isBoxChecked && 
       <FlexSection gridColumn="1/-1">
         <FlexSection margin="0 0 0 15px">
-          {allDefaultTasks
+          {/* {allDefaultTasks
             .filter(task => task.item === itemName)
             .map((task, index) => <Li margin="0 20px 0 0" key={index}>{task.task}: {task.frequency} days</Li>)
-          }
+          } */}
           {allCustomTasks
             .filter(task => task.item === itemName)
             .map((task, index) => <Fragment key={index}>

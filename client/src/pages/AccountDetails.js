@@ -7,7 +7,7 @@ import SuperForm from '../components/SuperForm/SuperForm'
 import ToggleVisibleInput from '../components/SuperForm/ToggleVisibleInput'
 import GroupOfInputs, { SuperFormSelect } from '../components/SuperForm/GroupOfInputs'
   
-const AccountDetails = ({setActivatedHomesLength}) => {
+const AccountDetailsPage = ({setActivatedHomesLength}) => {
   useHandleUserStatus()
   const history = useHistory()
   const userContext = useContext(UserContext)
@@ -185,4 +185,4 @@ const AccountDetails = ({setActivatedHomesLength}) => {
   )
 }
 
-export default AccountDetails
+export { AccountDetailsPage }

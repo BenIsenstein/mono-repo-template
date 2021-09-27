@@ -1,9 +1,20 @@
-import './App.css';
+import { Switch, Route } from 'react-router-dom'
+import './App.css'
+import { ThemeProvider } from "styled-components"
+import theme from './theme'
+import GlobalStyle from "./globalStyles"
+import { LandingPage, AccountDetailsPage } from './pages'
 
 const App = () => {
   return (
-    <h1>App</h1>
-  );
-};
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <Switch>
+        <Route exact path='/' component={LandingPage} />
+        <Route path='/account' render={(...props) => (<AccountDetailsPage {...props} />)} />
+      </Switch>
+    </ThemeProvider>
+  )
+}
 
-export default App;
+export default App
